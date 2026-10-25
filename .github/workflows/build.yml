@@ -1,0 +1,50 @@
+name: Build Rasi Keyboard
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          lfs: true
+
+      - name: Apply Rasi patch
+        run: git apply --whitespace=nowarn rasi.patch
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install NDK and CMake
+        run: |
+          SDKM=$(find "${ANDROID_HOME:-/usr/local/lib/android/sdk}" -name sdkmanager -type f | head -1)
+          echo "Using $SDKM"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "ndk;28.2.13676358" "cmake;3.22.1"
+
+      - name: Build
+        run: ./gradlew assembleUnstableDebug --no-daemon
+
+      - name: Publish APK to Releases (no zip, direct download)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          APK=$(find . -name "*.apk" -not -path "*/intermediates/*" | head -1)
+          echo "Found: $APK"
+          if [ -z "$APK" ]; then
+            echo "No APK found. All apk files:"
+            find . -name "*.apk" | head -20
+            exit 1
+          fi
+          ls -lh "$APK"
+          cp "$APK" rasi-keyboard.apk
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest rasi-keyboard.apk --title "Rasi Keyboard" --notes "Free, modified copy of FUTO Keyboard. See RASI-MODIFIED.md"
