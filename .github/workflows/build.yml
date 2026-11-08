@@ -48,3 +48,8 @@ jobs:
           cp "$APK" rasi-keyboard.apk
           gh release delete latest --yes --cleanup-tag || true
           gh release create latest rasi-keyboard.apk --title "Rasi Keyboard" --notes "Free, modified copy of FUTO Keyboard. See RASI-MODIFIED.md"
+
+      - name: Instant update alert
+        if: success()
+        run: |
+          curl -s -H "Title: Rboard updated" -H "Tags: update" -H "Click: https://github.com/Gameuy-G/Rboard/releases/download/latest/rasi-keyboard.apk" -d "A new version is ready. Tap to download." https://ntfy.sh/rboard-9cfbacd2ea78769856b0 || true
