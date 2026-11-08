@@ -18,6 +18,23 @@ jobs:
       - name: Apply Rasi patch
         run: git apply --whitespace=nowarn rasi.patch
 
+      - name: Force Rboard app names (permanent, survives any patch problem)
+        run: |
+          for D in java/res java/unstable/res; do
+            mkdir -p "$D/values"
+            cat > "$D/values/strings-appname.xml" <<'XMLEOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="english_ime_name">Rboard</string>
+              <string name="spell_checker_service_name">Rboard Spell Checker</string>
+              <string name="english_ime_settings">Rasi Keyboard Settings</string>
+              <string name="android_spell_checker_settings">Rboard Spell Checker Settings</string>
+          </resources>
+          XMLEOF
+          done
+          grep -H "english_ime" java/res/values/strings-appname.xml java/unstable/res/values/strings-appname.xml
+          if grep -q "FUTO" java/res/values/strings-appname.xml java/unstable/res/values/strings-appname.xml; then echo "FUTO name found"; exit 1; fi
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
