@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "136367758289",
+    "project_id": "rasi-board",
+    "storage_bucket": "rasi-board.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136367758289:android:5c5ed8bea051b7a13ddef0",
+        "android_client_info": {
+          "package_name": "org.futo.inputmethod.latin.unstable"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGh9EdDpaGwo8x3MSFD_Be3Ez2jGyg_7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
