@@ -23362,3 +23362,12 @@ ycmaEIkn!3f#tolrSn^6ziza`yah<HE#LMrWm+Fz2my(*or2qt)o1fbJR|Wu<U=Z>E
 
 delta 14
 Wcmcb1i1Eom#tolrHmBHrQU(A#S_g*!
+
+diff --git a/zz-patch-end.txt b/zz-patch-end.txt
+new file mode 100644
+index 0000000..80119eb
+--- /dev/null
++++ b/zz-patch-end.txt
+@@ -0,0 +1 @@
++end of rasi.patch marker
+\ No newline at end of file
