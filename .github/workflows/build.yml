@@ -16,7 +16,12 @@ jobs:
           lfs: true
 
       - name: Apply Rasi patch
-        run: git apply --whitespace=nowarn rasi.patch
+        run: |
+          # GitHub strips the trailing blank line of rasi.patch; put it back, then fail loudly on any apply error
+          if [ "$(tail -c 2 rasi.patch | od -An -c | tr -d ' ')" != '\n\n' ]; then printf '\n' >> rasi.patch; fi
+          out=$(git apply --whitespace=nowarn rasi.patch 2>&1) || { echo "$out"; exit 1; }
+          echo "$out"
+          if echo "$out" | grep -q '^error:'; then exit 1; fi
 
       - name: Force Rboard app names (permanent, survives any patch problem)
         run: |
@@ -39,6 +44,10 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: Install NDK and CMake
         run: |
